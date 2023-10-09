@@ -3,23 +3,59 @@ package cmd
 import (
 	"os"
 	"fmt"
+	"os/exec"
+	"strings"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 
 var rootCmd = &cobra.Command{
 	Use: "ouroboros",
-	Short: "Ouroboros updates the audio, the bluetooth drivers",
-	Long: "If running Ubunto on a MacBook, when the kernel is updated, ouroboros updates the audio, bluetooth or both drivers.",
+	Short: "Ouroboros automates needed tasks for running Ubuntu on a MacBook",
+	Long: "To keep the Ubuntu powered MacBooks functioning at work, Ouroboros is used to run commands that are often needed",
+}
+
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Print the version number of Ouroboros",
+	Long:  `All software has versions. This is Ouroboros's`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("----------- Ouroboros ------------")
-		fmt.Println("Which drivers should be installed?")
+		fmt.Println("Ouroboros Command Repeater v0.1")
 	},
 }
 
+func init() {
+	rootCmd.AddCommand(versionCmd)
+	cobra.OnInitialize(initConfig)
+}
+
+func initConfig() {
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig()
+	if err != nil { 
+		panic(fmt.Errorf("fatal error config file: %w", err))
+	}
+}
+  
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 	  fmt.Fprintln(os.Stderr, err)
 	  os.Exit(1)
 	}
   }
+
+
+func ExecuteCommand(command []string, successMsg string, errorMsg string) {
+	execCommand := exec.Command("sudo", command...)
+	output , err := execCommand.Output()
+	if err != nil {
+		fmt.Println(errorMsg)
+		} else {
+		stringOutput :=  strings.TrimSpace(string(output))
+		printString := strings.ToLower(string(stringOutput))
+		fmt.Println(successMsg, printString)
+	}
+}
