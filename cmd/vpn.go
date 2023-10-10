@@ -33,7 +33,7 @@ func init() {
 			)
 			time.Sleep(1 * time.Second)
 			ExecuteCommand(
-				[]string{"vpnc", viper.GetString("vpn_name"), "--local-port", strconv.Itoa(port)},
+				[]string{"vpnc", viper.GetString("vpnName"), "--local-port", strconv.Itoa(port)},
 				"success: you are connected to the vpn",
 				"error: could not connect to vpn",
 			)
@@ -53,7 +53,7 @@ func init() {
 			)
 		},
 	}
-	connect.Flags().IntVarP(&port, "port", "p", viper.GetInt("vpn_port"), "connect to vpn on selected port")
+	connect.Flags().IntVarP(&port, "port", "p", viper.GetInt("vpnPort"), "connect to vpn on selected port")
 	vpn.AddCommand(connect, disconnect)
 	rootCmd.AddCommand(vpn)
 }
