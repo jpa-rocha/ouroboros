@@ -48,14 +48,16 @@ func Execute() {
   }
 
 
-func ExecuteCommand(command []string, successMsg string, errorMsg string) {
+func ExecuteCommand(command []string, successMsg string, errorMsg string) error {
 	execCommand := exec.Command("sudo", command...)
 	output , err := execCommand.Output()
 	if err != nil {
 		fmt.Println(errorMsg)
-		} else {
+		return err
+	} else {
 		stringOutput :=  strings.TrimSpace(string(output))
 		printString := strings.ToLower(string(stringOutput))
 		fmt.Println(successMsg, printString)
 	}
+	return nil
 }
