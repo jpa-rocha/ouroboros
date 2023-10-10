@@ -1,0 +1,8 @@
+# VPN defaults
+vpnName: vpn
+vpnPort: 600
+
+# Update defaults
+audioGitRepo: https://github.com/jpa-rocha/snd_hda_macbookpro.git
+bluetoothGitRepo: https://github.com/jpa-rocha/macbook12-bluetooth-driver.git
+restart: true
