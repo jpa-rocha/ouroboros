@@ -3,13 +3,14 @@ package cmd
 import (
 	"strconv"
 	"time"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 
 func init() {
-	
+	var port int
 	var vpn = &cobra.Command {
 		Use: "vpn",
 		Short: "Manages connection to the preset vpn network",
@@ -18,7 +19,6 @@ func init() {
 		Args: cobra.NoArgs,
 	}
 	
-	var port int
 	var connect  = &cobra.Command {
 		Use: "connect",
 		Short: "Connects to the preset vpn network",

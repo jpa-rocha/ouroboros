@@ -9,23 +9,26 @@ import (
 	"github.com/spf13/viper"
 )
 
+
 func init() {
-	var reboot bool
 	var update = &cobra.Command {
 		Use: "update",
 		Short: "Select which drivers to update.",
 		Long: "Allows the user to manually select which drivers to update.",
 		Args: cobra.NoArgs,
+		
 	}
-
+	
+	var reboot bool
 	var audio = &cobra.Command {
 		Use: "audio",
 		Short: "Install audio drivers",
 		Long: "After kernel uppdates audio drivers need to be reinstalled [requires sudo]",
 		Args: cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+			installPrereqs(false)
 			installDriver(
-				"audio/",
+				"audio",
 				"./install.cirrus.driver.sh",
 				viper.GetString("audioGitRepo"),
 			)
@@ -41,11 +44,26 @@ func init() {
 		Long: "After kernel uppdates bluetooth drivers need to be reinstalled [requires sudo]",
 		Args: cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+			installPrereqs(false)
 			installDriver(
-				"bluetooth/",
+				"bluetooth",
 				"./install.bluetooth.sh",
 				viper.GetString("bluetoothGitRepo"),
 			)
+			if reboot {
+				rebootCmd()
+			}
+		},
+	}
+
+	var camera = &cobra.Command {
+		Use: "camera",
+		Short: "Install camera drivers",
+		Long: "After kernel uppdates camera drivers need to be reinstalled [requires sudo]",
+		Args: cobra.NoArgs,
+		Run: func(cmd *cobra.Command, args []string) {
+			installPrereqs(true)
+			installCamera()
 			if reboot {
 				rebootCmd()
 			}
@@ -58,13 +76,14 @@ func init() {
 		Long: "After kernel uppdates all drivers need to be reinstalled [requires sudo]",
 		Args: cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+			installPrereqs(true)
 			installDriver(
-				"audio/",
+				"audio",
 				"./install.cirrus.driver.sh",
 				viper.GetString("audioGitRepo"),
 			)
 			installDriver(
-				"bluetooth/",
+				"bluetooth",
 				"./install.bluetooth.sh",
 				viper.GetString("bluetoothGitRepo"),
 			)
@@ -74,11 +93,9 @@ func init() {
 		},
 	} 
 
-	audio.Flags().BoolVarP(&reboot, "reboot", "r", viper.GetBool("restart"), "reboot system after updates")
-	bluetooth.Flags().BoolVarP(&reboot, "reboot", "r", viper.GetBool("restart"), "reboot system after updates")
-	everything.Flags().BoolVarP(&reboot, "reboot", "r", viper.GetBool("restart"), "reboot system after updates")
+	update.PersistentFlags().BoolVarP(&reboot, "reboot", "r", viper.GetBool("reboot"), "reboot system after updates")
 	rootCmd.AddCommand(update)
-	update.AddCommand(audio, bluetooth, everything)
+	update.AddCommand(audio, bluetooth, camera, everything)
 }
 
 func handleError(err error) {
@@ -95,26 +112,91 @@ func rebootCmd() {
 	}
 }
 
-func installDriver(folder string, cmd string, repo string) {
+func installDriver(driver string, cmd string, repo string) {
+	fmt.Printf("starting %s driver installation...\n", driver)
 	err := ExecuteCommand(
-		[]string{"git", "clone", repo, folder},
+		[]string{"git", "clone", repo, driver},
 		"downloading needed repository...",
 		"error: there was a problem downloading the needed files",
 	)
 	handleError(err)
-	os.Chdir(folder)
+	err = os.Chdir(driver)
+	handleError(err)
 	err = ExecuteCommand(
 		[]string{cmd},
-		"installing the audio drivers...",
+		"installing the drivers...",
 		"error: there was a problem installing the drivers",
 	)
 	handleError(err)
 	os.Chdir("../")
 	err = ExecuteCommand(
-		[]string{"rm", "-rf", folder},
+		[]string{"rm", "-rf", driver},
 		"removing repository...",
 		"error: there was a problem removing the repository",
 	)
 	handleError(err)
-	fmt.Println("installed audio drivers successfuly")
+	fmt.Println("drivers installed successfuly")
+}
+
+func installPrereqs(isCamera bool) {
+	ExecuteCommand(
+		[]string{"apt", "get", "update"},
+		"checking for updates...",
+		"error: there was a problem checking for updates",
+	)
+	ExecuteCommand(
+		[]string{"apt", "upgrade", "-y"},
+		"applying updates...",
+		"error: there was a problem applying updates",
+	)
+	err := ExecuteCommand(
+		[]string{"apt", "install", "-y", "wget", "make", "gcc", "linux-headers-generic"},
+		"installing prerequisites...",
+		"error: there was a problem installing prerequisites",
+	)
+	if isCamera {
+		err = ExecuteCommand(
+			[]string{"apt", "install", "-y", "wget", "xz-utils", "curl", "cpio", "git", "kmod", "libssl-dev", "checkinstall"},
+			"installing prerequisites...",
+			"error: there was a problem installing prerequisites",
+		)
+	}
+	handleError(err)
+}
+
+func installCamera() {
+	cameraFirmware := "cameraFirmware"
+	cameraDrivers := "cameraDrivers"
+	fmt.Printf("starting %s firmware installation...\n", cameraFirmware)
+	err := ExecuteCommand([]string{"git", "clone", viper.GetString("cameraFirmware"), cameraFirmware}, "downloading needed repository...", "error: there was a problem downloading the needed files")
+	handleError(err)
+	err = os.Chdir(cameraFirmware)
+	handleError(err)
+	err = ExecuteCommand([]string{"make"}, "installing the drivers...", "error: there was a problem installing the drivers")
+	handleError(err)
+	err = ExecuteCommand([]string{"make", "install"}, "installing the drivers...", "error: there was a problem installing the drivers")
+	handleError(err)
+	os.Chdir("../")
+
+	err = ExecuteCommand([]string{"git", "clone", viper.GetString("cameraDrivers"), cameraDrivers}, "downloading needed repository...", "error: there was a problem downloading the needed files")
+	handleError(err)
+	err = os.Chdir(cameraDrivers)
+	handleError(err)
+	err = ExecuteCommand([]string{"make"}, "installing the drivers...", "error: there was a problem installing the drivers")
+	handleError(err)
+	err = ExecuteCommand([]string{"make", "install"}, "installing the drivers...", "error: there was a problem installing the drivers")
+	handleError(err)
+	err = ExecuteCommand([]string{"depmode"}, "installing the drivers...", "error: there was a problem installing the drivers")
+	handleError(err)
+	err = ExecuteCommand([]string{"modprobe", "-r", "bdc_pci"}, "installing the drivers...", "error: there was a problem installing the drivers")
+	handleError(err)
+	err = ExecuteCommand([]string{"modprobe", "facetimehd"}, "installing the drivers...", "error: there was a problem installing the drivers")
+	handleError(err)
+
+	os.Chdir("../")
+	err = ExecuteCommand([]string{"rm", "-rf", cameraFirmware}, "removing repository...", "error: there was a problem removing the repository")
+	handleError(err)
+	err = ExecuteCommand([]string{"rm", "-rf", cameraDrivers}, "removing repository...", "error: there was a problem removing the repository")
+	handleError(err)
+	fmt.Println("drivers installed successfuly")
 }

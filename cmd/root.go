@@ -33,7 +33,7 @@ func init() {
 func initConfig() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
+	viper.AddConfigPath("$HOME/ouroboros/")
 	err := viper.ReadInConfig()
 	if err != nil { 
 		panic(fmt.Errorf("fatal error config file: %w", err))
@@ -52,6 +52,8 @@ func ExecuteCommand(command []string, successMsg string, errorMsg string) error 
 	execCommand := exec.Command("sudo", command...)
 	output , err := execCommand.Output()
 	if err != nil {
+		fmt.Println(string(output))
+		fmt.Println(err)
 		fmt.Println(errorMsg)
 		return err
 	} else {
