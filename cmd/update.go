@@ -186,7 +186,7 @@ func installCamera() {
 	handleError(err)
 	err = ExecuteCommand([]string{"make", "install"}, "installing the drivers...", "error: there was a problem installing the drivers")
 	handleError(err)
-	err = ExecuteCommand([]string{"depmode"}, "installing the drivers...", "error: there was a problem installing the drivers")
+	err = ExecuteCommand([]string{"depmod"}, "installing the drivers...", "error: there was a problem installing the drivers")
 	handleError(err)
 	err = ExecuteCommand([]string{"modprobe", "facetimehd"}, "installing the drivers...", "error: there was a problem installing the drivers")
 	handleError(err)
