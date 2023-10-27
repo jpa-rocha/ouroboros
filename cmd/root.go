@@ -52,10 +52,10 @@ func ExecuteCommand(command []string, successMsg string, errorMsg string) error 
 	execCommand := exec.Command("sudo", command...)
 	output , err := execCommand.Output()
 	if err != nil {
-		fmt.Println(string(output))
-		fmt.Println(err)
-		fmt.Println(errorMsg)
-		return err
+		if len(string(output)) > 0 {
+			fmt.Println(errorMsg)
+			return err
+		}
 	} else {
 		stringOutput :=  strings.TrimSpace(string(output))
 		printString := strings.ToLower(string(stringOutput))
