@@ -166,12 +166,33 @@ func installPrereqs(isCamera bool) {
 
 func installCamera() {
 	cameraFirmware := "cameraFirmware"
+	cameraDrivers := "cameraDrivers"
+
+	installCameraFirmware(cameraFirmware)
+	installCameraDriver(cameraDrivers)
+	err := ExecuteCommand(
+		[]string{"rm", "-rf", cameraFirmware},
+		"removing repository...",
+		"error: there was a problem removing the repository",
+	)
+	handleError(err)
 	
+	err = ExecuteCommand(
+		[]string{"rm", "-rf", cameraDrivers},
+		"removing repository...",
+		"error: there was a problem removing the repository",
+	)
+	handleError(err)
+	fmt.Println("drivers installed successfuly")
+	
+}
+
+func installCameraFirmware(cameraFirmware string) {
 	fmt.Printf("starting %s firmware installation...\n", cameraFirmware)
 	err := ExecuteCommand(
 		[]string{"git", "clone", viper.GetString("cameraFirmware"), cameraFirmware},
 		"downloading needed repository...",
-		"error: there was a problem downloading the needed files"
+		"error: there was a problem downloading the needed files",
 	)
 	
 	handleError(err)
@@ -180,24 +201,24 @@ func installCamera() {
 	err = ExecuteCommand(
 		[]string{"make"},
 		"installing the drivers...",
-		"error: there was a problem installing the drivers"
+		"error: there was a problem installing the drivers",
 	)
 	
 	handleError(err)
 	err = ExecuteCommand(
 		[]string{"make", "install"},
 		"installing the drivers...",
-		"error: there was a problem installing the drivers"
+		"error: there was a problem installing the drivers",
 	)
-	
 	handleError(err)
 	os.Chdir("../")
+}
 
-	cameraDrivers := "cameraDrivers"
-	err = ExecuteCommand(
+func installCameraDriver(cameraDrivers string) {
+	err := ExecuteCommand(
 		[]string{"git", "clone", viper.GetString("cameraDrivers"), cameraDrivers},
 		"downloading needed repository...",
-		"error: there was a problem downloading the needed files"
+		"error: there was a problem downloading the needed files",
 	)
 	
 	handleError(err)
@@ -207,44 +228,29 @@ func installCamera() {
 	err = ExecuteCommand(
 		[]string{"make"},
 		"installing the drivers...",
-		"error: there was a problem installing the drivers"
+		"error: there was a problem installing the drivers",
 	)
 	
 	handleError(err)
 	err = ExecuteCommand(
 		[]string{"make", "install"},
 		"installing the drivers...",
-		"error: there was a problem installing the drivers"
+		"error: there was a problem installing the drivers",
 	)
 	
 	handleError(err)
 	err = ExecuteCommand(
 		[]string{"depmod"},
 		"installing the drivers...",
-		"error: there was a problem installing the drivers"
+		"error: there was a problem installing the drivers",
 	)
 	
 	handleError(err)
 	err = ExecuteCommand(
 		[]string{"modprobe", "facetimehd"},
 		"installing the drivers...",
-		"error: there was a problem installing the drivers"
+		"error: there was a problem installing the drivers",
 	)
 	handleError(err)
-
 	os.Chdir("../")
-	err = ExecuteCommand(
-		[]string{"rm", "-rf", cameraFirmware},
-		"removing repository...",
-		"error: there was a problem removing the repository"
-	)
-	handleError(err)
-	
-	err = ExecuteCommand(
-		[]string{"rm", "-rf", cameraDrivers},
-		"removing repository...",
-		"error: there was a problem removing the repository"
-	)
-	handleError(err)
-	fmt.Println("drivers installed successfuly")
 }
