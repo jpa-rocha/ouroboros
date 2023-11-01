@@ -87,6 +87,7 @@ func init() {
 				"./install.bluetooth.sh",
 				viper.GetString("bluetoothGitRepo"),
 			)
+			installCamera()
 			if reboot {
 				rebootCmd()
 			}
