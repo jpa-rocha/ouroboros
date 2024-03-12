@@ -141,23 +141,23 @@ func installDriver(driver string, cmd string, repo string) {
 
 func installPrereqs(isCamera bool) {
 	ExecuteCommand(
-		[]string{"apt", "get", "update"},
+		[]string{"dnf", "update"},
 		"checking for updates...",
 		"error: there was a problem checking for updates",
 	)
 	ExecuteCommand(
-		[]string{"apt", "upgrade", "-y"},
+		[]string{"dnf", "upgrade", "-y"},
 		"applying updates...",
 		"error: there was a problem applying updates",
 	)
 	err := ExecuteCommand(
-		[]string{"apt", "install", "-y", "wget", "make", "gcc", "linux-headers-generic"},
+		[]string{"dnf", "install", "-y", "wget", "make", "gcc", "linux-headers-generic"},
 		"installing prerequisites...",
 		"error: there was a problem installing prerequisites",
 	)
 	if isCamera {
 		err = ExecuteCommand(
-			[]string{"apt", "install", "-y", "wget", "xz-utils", "curl", "cpio", "git", "kmod", "libssl-dev", "checkinstall"},
+			[]string{"dnf", "install", "-y", "wget", "xz-utils", "curl", "cpio", "git", "kmod", "libssl-dev", "checkinstall"},
 			"installing prerequisites...",
 			"error: there was a problem installing prerequisites",
 		)
