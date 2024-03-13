@@ -16,17 +16,7 @@ var rootCmd = &cobra.Command{
 	Long: "To keep the Ubuntu powered MacBooks functioning at work, Ouroboros is used to run commands that are often needed",
 }
 
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Print the version number of Ouroboros",
-	Long:  `All software has versions. This is Ouroboros's`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Ouroboros Command Repeater v0.1")
-	},
-}
-
 func init() {
-	rootCmd.AddCommand(versionCmd)
 	cobra.OnInitialize(initConfig)
 }
 

@@ -151,13 +151,13 @@ func installPrereqs(isCamera bool) {
 		"error: there was a problem applying updates",
 	)
 	err := ExecuteCommand(
-		[]string{"dnf", "install", "-y", "wget", "make", "gcc", "linux-headers-generic"},
+		[]string{"dnf", "install", "-y", "dkms", "gcc", "kernel-devel", "patch", "make", "wget"},
 		"installing prerequisites...",
 		"error: there was a problem installing prerequisites",
 	)
 	if isCamera {
 		err = ExecuteCommand(
-			[]string{"dnf", "install", "-y", "wget", "xz-utils", "curl", "cpio", "git", "kmod", "libssl-dev", "checkinstall"},
+			[]string{"dnf", "install", "-y", "wget", "curl", "cpio", "kmod", "kernel-devel"},
 			"installing prerequisites...",
 			"error: there was a problem installing prerequisites",
 		)
