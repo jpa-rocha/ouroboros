@@ -31,7 +31,7 @@ func init() {
 				"checking for existing connections...",
 				"no vpnc found running",
 			)
-			time.Sleep(1 * time.Second)
+			time.Sleep(5 * time.Second)
 			ExecuteCommand(
 				[]string{"vpnc", viper.GetString("vpnName"), "--local-port", strconv.Itoa(port)},
 				"success: you are connected to the vpn",
