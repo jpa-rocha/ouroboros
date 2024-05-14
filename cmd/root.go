@@ -12,8 +12,8 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use: "ouroboros",
-	Short: "Ouroboros automates needed tasks for running Ubuntu on a MacBook",
-	Long: "To keep the Ubuntu powered MacBooks functioning at work, Ouroboros is used to run commands that are often needed",
+	Short: "Ouroboros automates needed tasks for running Linux on a MacBook",
+	Long: "To keep the Linux powered MacBooks functioning at work, Ouroboros is used to run commands that are often needed",
 }
 
 func init() {

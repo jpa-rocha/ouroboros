@@ -10,10 +10,9 @@ import (
 
 
 func init() {
-	var port int
-	var vpn = &cobra.Command {
-		Use: "vpn",
-		Short: "Manages connection to the preset vpn network",
+	vpn := &cobra.Command{
+		Use:       "vpn",
+		Short:     "Manages connection to the preset vpn network",
 		ValidArgs: []string{"connect", "disconnect"},
 		Long: "After setting a vpn network using the vpnc tool ouroboros vpn calls the command to connect or disconnect from it [requires sudo]",
 		Args: cobra.NoArgs,
@@ -25,6 +24,8 @@ func init() {
 		Long: "After setting a vpn network using the vpnc tool, vpn connect calls the command to connect or disconnect from it [requires sudo]",
 		Args: cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
+            port := viper.GetInt("vpnPort") 
+            mtu := viper.GetInt("mtuSetting")
 			// Close any previous connections
 			ExecuteCommand(
 				[]string{"vpnc-disconnect"},
@@ -33,7 +34,7 @@ func init() {
 			)
 			time.Sleep(5 * time.Second)
 			ExecuteCommand(
-				[]string{"vpnc", viper.GetString("vpnName"), "--local-port", strconv.Itoa(port)},
+				[]string{"vpnc", viper.GetString("vpnName"), "--local-port", strconv.Itoa(port), "--ifmtu", strconv.Itoa(mtu)},
 				"success: you are connected to the vpn",
 				"error: could not connect to vpn",
 			)
@@ -53,7 +54,6 @@ func init() {
 			)
 		},
 	}
-	connect.Flags().IntVarP(&port, "port", "p", viper.GetInt("vpnPort"), "connect to vpn on selected port")
-	vpn.AddCommand(connect, disconnect)
+    vpn.AddCommand(connect, disconnect)
 	rootCmd.AddCommand(vpn)
 }
