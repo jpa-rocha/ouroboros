@@ -9,22 +9,20 @@ import (
 	"github.com/spf13/viper"
 )
 
-
 func init() {
-	var update = &cobra.Command {
-		Use: "update",
+	update := &cobra.Command{
+		Use:   "update",
 		Short: "Select which drivers to update.",
-		Long: "Allows the user to manually select which drivers to update.",
-		Args: cobra.NoArgs,
-		
+		Long:  "Allows the user to manually select which drivers to update.",
+		Args:  cobra.NoArgs,
 	}
-	
+
 	var reboot bool
-	var audio = &cobra.Command {
-		Use: "audio",
+	audio := &cobra.Command{
+		Use:   "audio",
 		Short: "Install audio drivers",
-		Long: "After kernel uppdates audio drivers need to be reinstalled [requires sudo]",
-		Args: cobra.NoArgs,
+		Long:  "After kernel uppdates audio drivers need to be reinstalled [requires sudo]",
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			installPrereqs(false)
 			installDriver(
@@ -38,11 +36,11 @@ func init() {
 		},
 	}
 
-	var bluetooth = &cobra.Command {
-		Use: "bluetooth",
+	bluetooth := &cobra.Command{
+		Use:   "bluetooth",
 		Short: "Install bluetooth drivers",
-		Long: "After kernel uppdates bluetooth drivers need to be reinstalled [requires sudo]",
-		Args: cobra.NoArgs,
+		Long:  "After kernel uppdates bluetooth drivers need to be reinstalled [requires sudo]",
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			installPrereqs(false)
 			installDriver(
@@ -56,11 +54,11 @@ func init() {
 		},
 	}
 
-	var camera = &cobra.Command {
-		Use: "camera",
+	camera := &cobra.Command{
+		Use:   "camera",
 		Short: "Install camera drivers",
-		Long: "After kernel uppdates camera drivers need to be reinstalled [requires sudo]",
-		Args: cobra.NoArgs,
+		Long:  "After kernel uppdates camera drivers need to be reinstalled [requires sudo]",
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			installPrereqs(true)
 			installCamera()
@@ -70,11 +68,11 @@ func init() {
 		},
 	}
 
-	var everything = &cobra.Command {
-		Use: "everything",
+	everything := &cobra.Command{
+		Use:   "everything",
 		Short: "Install all drivers",
-		Long: "After kernel uppdates all drivers need to be reinstalled [requires sudo]",
-		Args: cobra.NoArgs,
+		Long:  "After kernel uppdates all drivers need to be reinstalled [requires sudo]",
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			installPrereqs(true)
 			installDriver(
@@ -92,7 +90,7 @@ func init() {
 				rebootCmd()
 			}
 		},
-	} 
+	}
 
 	update.PersistentFlags().BoolVarP(&reboot, "reboot", "r", viper.GetBool("reboot"), "reboot system after updates")
 	rootCmd.AddCommand(update)
@@ -141,7 +139,7 @@ func installDriver(driver string, cmd string, repo string) {
 
 func installPrereqs(isCamera bool) {
 	ExecuteCommand(
-		[]string{"dnf", "update"},
+		[]string{"dnf", "update", "-y"},
 		"checking for updates...",
 		"error: there was a problem checking for updates",
 	)
@@ -177,7 +175,7 @@ func installCamera() {
 		"error: there was a problem removing the repository",
 	)
 	handleError(err)
-	
+
 	err = ExecuteCommand(
 		[]string{"rm", "-rf", cameraDrivers},
 		"removing repository...",
@@ -185,7 +183,6 @@ func installCamera() {
 	)
 	handleError(err)
 	fmt.Println("drivers installed successfuly")
-	
 }
 
 func installCameraFirmware(cameraFirmware string) {
@@ -195,7 +192,7 @@ func installCameraFirmware(cameraFirmware string) {
 		"downloading needed repository...",
 		"error: there was a problem downloading the needed files",
 	)
-	
+
 	handleError(err)
 	err = os.Chdir(cameraFirmware)
 	handleError(err)
@@ -204,7 +201,7 @@ func installCameraFirmware(cameraFirmware string) {
 		"installing the drivers...",
 		"error: there was a problem installing the drivers",
 	)
-	
+
 	handleError(err)
 	err = ExecuteCommand(
 		[]string{"make", "install"},
@@ -221,31 +218,31 @@ func installCameraDriver(cameraDrivers string) {
 		"downloading needed repository...",
 		"error: there was a problem downloading the needed files",
 	)
-	
+
 	handleError(err)
 	err = os.Chdir(cameraDrivers)
 	handleError(err)
-	
+
 	err = ExecuteCommand(
 		[]string{"make"},
 		"installing the drivers...",
 		"error: there was a problem installing the drivers",
 	)
-	
+
 	handleError(err)
 	err = ExecuteCommand(
 		[]string{"make", "install"},
 		"installing the drivers...",
 		"error: there was a problem installing the drivers",
 	)
-	
+
 	handleError(err)
 	err = ExecuteCommand(
 		[]string{"depmod"},
 		"installing the drivers...",
 		"error: there was a problem installing the drivers",
 	)
-	
+
 	handleError(err)
 	err = ExecuteCommand(
 		[]string{"modprobe", "facetimehd"},
