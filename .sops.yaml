@@ -1,0 +1,10 @@
+jrocha_key: &jrocha
+  - age1h6yj6lau7vea338raklxs4eeksgzwgjhggrkxsxnla767nm8ed4qa6takk
+
+creation_rules:
+  - path_regex: secrets.yaml
+    key_groups:
+      - age: *jrocha
+  - path_regex: ./secrets.yaml
+    key_groups:
+      - age: *jrocha
