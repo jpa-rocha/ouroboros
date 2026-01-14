@@ -49,8 +49,8 @@ type Secrets struct {
 }
 
 type VPN struct {
-	IPSec    IPSec    `yaml:"ipsec"`
-	IDWobcom IDWobcom `yaml:"idwobcom"`
+	IPSec IPSec `yaml:"ipsec"`
+	ID    ID    `yaml:"id"`
 }
 
 type IPSec struct {
@@ -58,7 +58,7 @@ type IPSec struct {
 	Password string `yaml:"password"`
 }
 
-type IDWobcom struct {
+type ID struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 }

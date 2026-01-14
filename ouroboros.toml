@@ -7,7 +7,7 @@ address = "vpn.wobcom.de"
 
 [secrets]
 path = "secrets.yaml"
-# Update defaults
+
 [repos]
 audio_git_repo = "https://github.com/jpa-rocha/snd_hda_macbookpro.git"
 bluetooth_git_repo = "https://github.com/jpa-rocha/macbook12-bluetooth-driver.git"

@@ -1,3 +1,4 @@
+// Package start holds the internal of the start command
 package start
 
 import (
@@ -33,9 +34,9 @@ func Start(ctx context.Context) error {
 		"--secret",
 		config.Opt.Secrets.VPN.IPSec.Password,
 		"--username",
-		config.Opt.Secrets.VPN.IDWobcom.Username,
+		config.Opt.Secrets.VPN.ID.Username,
 		"--password",
-		config.Opt.Secrets.VPN.IDWobcom.Password,
+		config.Opt.Secrets.VPN.ID.Password,
 		"--ifmtu",
 		strconv.Itoa(config.Opt.Settings.MTU),
 	)
