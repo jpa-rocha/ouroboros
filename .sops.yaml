@@ -1,10 +1,11 @@
-jrocha_key: &jrocha
-  - age1h6yj6lau7vea338raklxs4eeksgzwgjhggrkxsxnla767nm8ed4qa6takk
+ekraujins_key: &ekraujins
+  - age1vl3rrem8cy4zcszckvt2td6d39qn6n530ta6kfqzs4v7hklvuyms2zxlnf
+
 
 creation_rules:
   - path_regex: secrets.yaml
     key_groups:
-      - age: *jrocha
+      - age: *ekraujins
   - path_regex: ./secrets.yaml
     key_groups:
-      - age: *jrocha
+      - age: *ekraujins
