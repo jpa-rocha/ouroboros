@@ -11,6 +11,7 @@
   scripts,
   self,
   system,
+  sops,
   ...
 }:
 {
@@ -24,6 +25,7 @@
       golangci-lint-langserver
       gopls
       ouroboros
+      sops
       scripts.create-version
       scripts.lint
       scripts.build
