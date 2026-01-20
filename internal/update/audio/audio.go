@@ -8,6 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// RunAudio installs audio drivers by installing prerequisites and cloning/running the audio driver installation script.
+// Takes a Cobra command and ignores the arguments.
+// Optionally reboots the system if configured to do so.
+// Returns error if installation or reboot fails.
 func RunAudio(cmd *cobra.Command, _ []string) error {
 	ctx := cmd.Context()
 	update.InstallPrereqs(ctx, false)

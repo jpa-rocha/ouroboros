@@ -68,6 +68,12 @@ var Opt Config
 
 const value = "value"
 
+// InitConfig initializes the application configuration from ouroboros.toml.
+// Looks for config in $HOME/.config/ouroboros/ or current directory.
+// Supports environment variable overrides with OUROBOROS_ prefix (e.g., OUROBOROS_LOGGER_LEVEL).
+// Parses repository URLs and exits on configuration errors.
+// Populates the global Opt variable with parsed configuration.
+// Takes parent context for error logging.
 func InitConfig(parentContext context.Context) {
 	viper.SetConfigName("ouroboros")
 	viper.SetConfigType("toml")
@@ -150,6 +156,8 @@ func InitConfig(parentContext context.Context) {
 	defaults()
 }
 
+// defaults sets default values for configuration options.
+// Sets logger level to INFO if not explicitly configured.
 func defaults() {
 	viper.SetDefault("logger.level", "INFO")
 }

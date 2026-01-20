@@ -1,18 +1,45 @@
+# Ouroboros Configuration File
+# This file configures logging, VPN settings, driver repositories, and reboot behavior
+# Configuration can be overridden with environment variables prefixed with OUROBOROS_ (e.g., OUROBOROS_LOGGER_LEVEL)
+
+# Logger configuration
+# Controls the verbosity of log output
 [logger]
+# Logging level: DEBUG, INFO, WARN, or ERROR
+# DEBUG shows the most verbose output, ERROR shows only errors
 level = "DEBUG"
 
+# VPN connection settings
+# Credentials are stored separately in the encrypted secrets.yaml file
 [settings]
+# MTU (Maximum Transmission Unit) size for VPN tunnel in bytes
+# Typically 1320 for IPSec connections, must be less than physical interface MTU
 mtu = 1320
+# VPN gateway address/hostname to connect to
 address = "vpn.wobcom.de"
 
+# Secrets configuration
+# Path to the SOPS-encrypted secrets file containing VPN credentials
+# Should be relative to current directory or config directory
 [secrets]
+# Path to encrypted YAML file with IPSec and ID authentication credentials
 path = "secrets.yaml"
 
+# Driver repository URLs
+# Git repositories containing MacBook-specific driver installation scripts
+# Format: package_name_git_repo = "https://github.com/owner/repo.git"
 [repos]
+# Audio driver repository for Cirrus Logic audio chipset (MacBook Pro)
 audio_git_repo = "https://github.com/jpa-rocha/snd_hda_macbookpro.git"
+# Bluetooth driver repository for MacBook12-compatible Bluetooth hardware
 bluetooth_git_repo = "https://github.com/jpa-rocha/macbook12-bluetooth-driver.git"
+# Camera firmware repository for FaceTime HD camera support
 camera_firmware = "https://github.com/jpa-rocha/facetimehd-firmware"
+# Camera driver repository for FaceTime HD camera kernel module
 camera_drivers = "https://github.com/jpa-rocha/facetimehd"
 
+# System reboot configuration
+# Controls whether system reboots automatically after driver installation
 [reboot]
+# Set to true for automatic reboot after driver updates, false to prompt manually
 yes = true

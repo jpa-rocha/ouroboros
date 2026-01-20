@@ -7,6 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Cmd returns the audio driver installation command.
+// The command requires sudo privileges and reinstalls audio drivers after kernel updates.
+// Returns the configured audio command.
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "audio",

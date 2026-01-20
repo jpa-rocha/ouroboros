@@ -14,6 +14,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+// RunCamera installs camera firmware and drivers by installing prerequisites and running the camera installation process.
+// Takes a Cobra command and ignores the arguments.
+// Optionally reboots the system if configured to do so.
+// Returns error if installation or reboot fails.
 func RunCamera(cmd *cobra.Command, _ []string) error {
 	ctx := cmd.Context()
 	update.InstallPrereqs(ctx, true)
@@ -28,6 +32,10 @@ func RunCamera(cmd *cobra.Command, _ []string) error {
 	return nil
 }
 
+// InstallCamera orchestrates installation of camera firmware and drivers.
+// Takes context for logging. Clones and compiles camera firmware, then installs camera drivers.
+// Cleans up cloned repositories after successful installation.
+// Exits on any error encountered during the process.
 func InstallCamera(ctx context.Context) {
 	cameraFirmware := "cameraFirmware"
 	cameraDrivers := "cameraDrivers"
@@ -50,6 +58,11 @@ func InstallCamera(ctx context.Context) {
 	fmt.Println("drivers installed successfuly")
 }
 
+// installCameraFirmware clones and compiles camera firmware from a configured repository.
+// Takes context for logging and the directory name to clone into.
+// Runs make and make install to compile and install firmware.
+// Returns to parent directory after completion.
+// Exits on any error encountered during the process.
 func installCameraFirmware(ctx context.Context, cameraFirmware string) {
 	fmt.Printf("starting %s firmware installation...\n", cameraFirmware)
 	err := update.ExecuteCommand(ctx,
@@ -83,6 +96,11 @@ func installCameraFirmware(ctx context.Context, cameraFirmware string) {
 	}
 }
 
+// installCameraDriver clones, compiles, and loads the camera driver kernel module.
+// Takes context for logging and the directory name to clone into.
+// Runs make, make install, depmod, and modprobe facetimehd to compile and load the driver.
+// Returns to parent directory after completion.
+// Exits on any error encountered during the process.
 func installCameraDriver(ctx context.Context, cameraDrivers string) {
 	err := update.ExecuteCommand(
 		ctx,

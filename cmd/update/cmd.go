@@ -12,6 +12,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Cmd returns the update command with its subcommands for installing drivers.
+// Provides options to update audio, bluetooth, camera drivers individually or all at once.
+// Returns the configured update command.
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "update",

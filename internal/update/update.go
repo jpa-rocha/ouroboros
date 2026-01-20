@@ -21,6 +21,10 @@ const (
 	INSTALL_BLUETOOTH = "./install.bluetooth.sh"
 )
 
+// ExecuteCommand runs a command with sudo privileges and logs the result.
+// Takes a context for logging, command slice to execute, and success/error messages.
+// Logs success with the command output (lowercased) or error if execution fails.
+// Returns error if command execution fails with output.
 func ExecuteCommand(
 	ctx context.Context,
 	command []string,
@@ -42,12 +46,18 @@ func ExecuteCommand(
 	return nil
 }
 
+// HandleError exits the program with status code 1 if an error is encountered.
+// Used to handle critical errors during driver installation.
 func HandleError(err error) {
 	if err != nil {
 		os.Exit(1)
 	}
 }
 
+// InstallDriver clones a driver repository, runs its installation script, and cleans up.
+// Takes context for logging, driver name, installation script path, and repository URL.
+// Clones the repo, enters the directory, runs the install script, and removes the cloned directory.
+// Exits on any error encountered during the process.
 func InstallDriver(ctx context.Context, driver string, cmd string, repo url.URL) {
 	fmt.Printf("starting %s driver installation...\n", driver)
 	err := ExecuteCommand(ctx,
@@ -77,6 +87,10 @@ func InstallDriver(ctx context.Context, driver string, cmd string, repo url.URL)
 	fmt.Println("drivers installed successfuly")
 }
 
+// InstallPrereqs updates the system and installs required packages for driver compilation.
+// Takes context for logging and a boolean flag to install additional camera-specific dependencies.
+// Runs apt update and upgrade, then installs common build tools and optional camera packages.
+// Exits on any error encountered during the process.
 func InstallPrereqs(ctx context.Context, isCamera bool) {
 	if err := ExecuteCommand(ctx,
 		[]string{"apt", "update"},
@@ -123,6 +137,8 @@ func InstallPrereqs(ctx context.Context, isCamera bool) {
 	}
 }
 
+// RebootCmd executes the system reboot command with sudo privileges.
+// Takes context for logging and returns error if the reboot command fails.
 func RebootCmd(ctx context.Context) error {
 	reboot := exec.Command("sudo", "reboot")
 	err := reboot.Run()

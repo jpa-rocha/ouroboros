@@ -8,6 +8,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// RunBluetooth installs bluetooth drivers by installing prerequisites and cloning/running the bluetooth driver installation script.
+// Takes a Cobra command and ignores the arguments.
+// Optionally reboots the system if configured to do so.
+// Returns error if installation or reboot fails.
 func RunBluetooth(cmd *cobra.Command, _ []string) error {
 	ctx := cmd.Context()
 	update.InstallPrereqs(ctx, false)

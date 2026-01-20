@@ -7,6 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Cmd returns the camera driver installation command.
+// The command requires sudo privileges and reinstalls camera firmware and drivers after kernel updates.
+// Returns the configured camera command.
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "camera",

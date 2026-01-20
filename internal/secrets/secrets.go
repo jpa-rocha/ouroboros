@@ -12,6 +12,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// SecretsInit decrypts and loads secrets from the SOPS-encrypted secrets file.
+// Takes context for error logging.
+// Decrypts the secrets file path from global config, unmarshals YAML into Secrets struct.
+// Updates global config with decrypted VPN credentials and exits on decryption or parsing errors.
 func SecretsInit(ctx context.Context) {
 	secretsByteArray, err := decrypt.File(config.Opt.Secrets.Path, "yaml")
 	if err != nil {

@@ -9,6 +9,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Cmd returns the VPN stop command.
+// Terminates an active VPN connection.
+// Returns the configured stop command.
 func Cmd() *cobra.Command {
 	cmd := cobra.Command{
 		Use:   "stop",

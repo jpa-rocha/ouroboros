@@ -11,6 +11,10 @@ import (
 	"github.com/lmittmann/tint"
 )
 
+// Init initializes the structured logger with configured log level and colored output.
+// Reads log level from configuration (INFO, DEBUG, ERROR, WARN), defaults to DEBUG.
+// Writes logs to stderr using tint handler for colored, human-readable output.
+// Sets the default slog logger globally for use throughout the application.
 func Init() {
 	w := os.Stderr
 

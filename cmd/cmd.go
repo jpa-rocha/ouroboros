@@ -14,6 +14,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// RootCmd returns the root Cobra command for the Ouroboros CLI.
+// It sets up the main command structure, initializes the logger, configuration,
+// and secrets before any subcommand execution via PersistentPreRun.
+// Returns the configured root command with all subcommands attached.
 func RootCmd() *cobra.Command {
 	ctx := context.Background()
 	cmd := cobra.Command{
@@ -36,6 +40,9 @@ func RootCmd() *cobra.Command {
 	return &cmd
 }
 
+// Execute initializes and executes the root command with its context.
+// It wraps errors with fmt.Errorf to preserve stack traces.
+// Returns an error if command execution fails.
 func Execute() error {
 	ctx := RootCmd().Context()
 	if err := RootCmd().ExecuteContext(ctx); err != nil {

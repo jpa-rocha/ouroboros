@@ -7,6 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Cmd returns the command to install all drivers.
+// The command requires sudo privileges and reinstalls all drivers (audio, bluetooth, camera) after kernel updates.
+// Returns the configured all command.
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "all",

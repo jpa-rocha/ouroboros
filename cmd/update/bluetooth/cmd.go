@@ -7,6 +7,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Cmd returns the bluetooth driver installation command.
+// The command requires sudo privileges and reinstalls bluetooth drivers after kernel updates.
+// Returns the configured bluetooth command.
 func Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "bluetooth",
