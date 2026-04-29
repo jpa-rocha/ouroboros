@@ -31,6 +31,8 @@
       scripts.build
       scripts.test
       scripts.tidy
+      scripts.start
+      scripts.stop
     ];
     inherit (self.checks.${system}.pre-commit-check) shellHook;
   };

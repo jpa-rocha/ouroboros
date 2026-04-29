@@ -21,6 +21,16 @@
     ${pkgs.nix}/bin/nix flake check
   '';
 
+  start = pkgs.writeShellScriptBin "start" ''
+    set -euo pipefail
+    ./ouroboros vpn start
+  '';
+
+  stop = pkgs.writeShellScriptBin "stop" ''
+    set -euo pipefail
+    ${go}/bin/go run main.go vpn stop
+  '';
+
   build = pkgs.writeShellScriptBin "build" ''
     set -euo pipefail
     ${go}/bin/go build -o ouroboros main.go
